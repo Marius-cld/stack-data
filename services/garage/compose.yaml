@@ -1,0 +1,27 @@
+# Garage — data lake S3 (nœud unique)
+services:
+  garage:
+    image: dxflrs/garage:v2.4.1
+    restart: unless-stopped
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?GARAGE_RPC_SECRET manquant dans .env}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:?GARAGE_ADMIN_TOKEN manquant dans .env}
+      GARAGE_METRICS_TOKEN: ${GARAGE_METRICS_TOKEN:?GARAGE_METRICS_TOKEN manquant dans .env}
+    ports:
+      - "127.0.0.1:${GARAGE_S3_PORT:-3900}:3900"     # API S3
+      - "127.0.0.1:${GARAGE_ADMIN_PORT:-3903}:3903"  # API admin / métriques
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - garage_meta:/var/lib/garage/meta
+      - garage_data:/var/lib/garage/data
+    healthcheck:
+      # Image "FROM scratch" (pas de shell ni curl) : on interroge le binaire garage lui-même
+      test: ["CMD", "/garage", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  garage_meta:
+  garage_data:

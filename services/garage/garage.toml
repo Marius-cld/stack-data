@@ -1,0 +1,25 @@
+# Garage — configuration nœud unique (dev local)
+# Réf. : https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/
+#
+# Les secrets (rpc_secret, admin_token, metrics_token) ne sont volontairement PAS ici :
+# ils sont injectés par compose.yaml via GARAGE_RPC_SECRET / GARAGE_ADMIN_TOKEN / GARAGE_METRICS_TOKEN.
+
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+# sqlite : plus lent que lmdb mais plus robuste aux arrêts brutaux (laptop, Docker Desktop)
+db_engine = "sqlite"
+
+# Un seul nœud => une seule copie de chaque objet
+replication_factor = 1
+
+rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "127.0.0.1:3901"
+
+[s3_api]
+# Doit correspondre à LAKE_REGION dans le .env
+s3_region = "garage"
+api_bind_addr = "[::]:3900"
+root_domain = ".s3.garage.localhost"
+
+[admin]
+api_bind_addr = "[::]:3903"
