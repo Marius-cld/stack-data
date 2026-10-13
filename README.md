@@ -1,6 +1,6 @@
 # stack-data
 
-Stack data minimaliste pour apprendre l'ELT de bout en bout sur le jeu de données e-commerce
+Stack data ELT de bout en bout sur le jeu de données e-commerce
 [Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce).
 
 ```text
@@ -8,8 +8,8 @@ data/raw/*.csv ──extract (dlt)──> Garage S3 ──load (dlt)──> Post
    fichiers                        data lake                 data warehouse
 ```
 
-| Étape     | Outil              | Code                             |
-| --------- | ------------------ | -------------------------------- |
+| Étape    | Outil              | Code                               |
+| --------- | ------------------ | ---------------------------------- |
 | Extract   | dlt                | `src/extract/extract_to_lake.py` |
 | Load      | dlt                | `src/load/load_to_warehouse.py`  |
 | Transform | dbt                | `src/transform/olist_analytics/` |
