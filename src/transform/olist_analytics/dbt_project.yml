@@ -1,36 +1,31 @@
+name: olist_analytics
+version: "1.0.0"
+profile: olist_analytics
+# Syntaxe `arguments:` des tests génériques : dbt >= 1.10
+require-dbt-version: [">=1.10.0", "<2.0.0"]
 
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'olist_analytics'
-version: '1.0.0'
+vars:
+  WAREHOUSE_HOST: "{{ env_var('WAREHOUSE_HOST', 'localhost') }}"
+  WAREHOUSE_PORT: "{{ env_var('WAREHOUSE_PORT', '5432') }}"
+  WAREHOUSE_DB: "{{ env_var('WAREHOUSE_DB', 'olist_analytics') }}"
+  WAREHOUSE_USER: "{{ env_var('WAREHOUSE_USER', 'postgres') }}"
+  WAREHOUSE_PASSWORD: "{{ env_var('WAREHOUSE_PASSWORD', 'postgres') }}"
 
-# This setting configures which "profile" dbt uses for this project.
-profile: 'olist_analytics'
+clean-targets:
+  - target
+  - dbt_packages
 
-# These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
-model-paths: ["models"]
-analysis-paths: ["analyses"]
-test-paths: ["tests"]
-seed-paths: ["seeds"]
-macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
-
-clean-targets:         # directories to be removed by `dbt clean`
-  - "target"
-  - "dbt_packages"
-
-
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
-
-# In this example config, we tell dbt to build all models in the example/
-# directory as views. These settings can be overridden in the individual model
-# files using the `{{ config(...) }}` macro.
+# Une couche = un dossier = un schéma PostgreSQL (voir macros/generate_schema_name.sql)
 models:
   olist_analytics:
-    # Config indicated by + and applies to all files under models/example/
-    example:
+    # view : simple renommage/typage, recalculé à chaque lecture (rien de stocké)
+    staging:
       +materialized: view
+      +schema: staging
+    # table : jointures et agrégations lourdes réutilisées par plusieurs marts, calculées une seule fois
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts

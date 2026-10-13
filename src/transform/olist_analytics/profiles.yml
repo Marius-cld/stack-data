@@ -1,0 +1,15 @@
+# Connexion au data warehouse, lue depuis les variables WAREHOUSE_* du .env (aucun secret ici).
+# dbt utilise ce fichier quand il est lancé depuis ce dossier.
+olist_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('WAREHOUSE_HOST') }}"
+      port: "{{ env_var('WAREHOUSE_PORT') | as_number }}"
+      dbname: "{{ env_var('WAREHOUSE_DB') }}"
+      user: "{{ env_var('WAREHOUSE_USER') }}"
+      password: "{{ env_var('WAREHOUSE_PASSWORD') }}"
+      # Schéma par défaut, inutilisé : chaque couche a son schéma (dbt_project.yml)
+      schema: analytics
+      threads: 4

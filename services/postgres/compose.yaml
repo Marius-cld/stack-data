@@ -3,6 +3,8 @@ services:
   postgres:
     image: postgres:18-alpine
     restart: unless-stopped
+    # 64 Mo par défaut : trop peu pour les requêtes parallèles de dbt (threads > 1)
+    shm_size: 256mb
     environment:
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB manquant dans .env}
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER manquant dans .env}

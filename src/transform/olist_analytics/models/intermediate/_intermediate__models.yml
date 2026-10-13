@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: int_orders_enriched
+    description: "Commandes enrichies (client, articles, paiements, dernier avis), 1 ligne par commande."
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+
+  - name: int_payments_aggregated
+    description: "Paiements agrégés, 1 ligne par commande payée."
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+
+  - name: int_products_translated
+    description: "Produits avec leur catégorie traduite en anglais, 1 ligne par produit."
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: int_geolocation_aggregated
+    description: "Point GPS moyen, 1 ligne par préfixe de code postal."
+    columns:
+      - name: zip_code_prefix
+        data_tests: [unique, not_null]

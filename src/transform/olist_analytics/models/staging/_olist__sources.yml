@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: olist_raw
+    description: "Données brutes Olist chargées par dlt (src/load), toutes colonnes en texte."
+    # Même variable que le pipeline de chargement (setting/config.py)
+    schema: "{{ env_var('WAREHOUSE_RAW_SCHEMA', 'raw') }}"
+    tables:
+      - name: orders
+        description: "Commandes, 1 ligne par commande."
+      - name: order_items
+        description: "Articles des commandes, 1 ligne par article d'une commande."
+      - name: order_payments
+        description: "Paiements, une commande peut être réglée en plusieurs lignes de paiement."
+      - name: order_reviews
+        description: "Avis clients sur les commandes."
+      - name: customers
+        description: "Clients, 1 ligne par commande (customer_id) ; customer_unique_id identifie la personne."
+      - name: products
+        description: "Catalogue produits."
+      - name: sellers
+        description: "Vendeurs de la marketplace."
+      - name: geolocation
+        description: "Coordonnées GPS par préfixe de code postal, plusieurs points par préfixe."
+      - name: product_category_name_translation
+        description: "Traduction portugais -> anglais des catégories produit."

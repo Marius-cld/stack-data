@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "Faits commandes, 1 ligne par commande."
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_unique_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_unique_id
+      - name: customer_state
+        description: "État du client au moment de la commande."
+      - name: delivery_vs_estimate_days
+        description: "Écart en jours entre livraison réelle et estimée, positif si en retard."
+      - name: is_delivered_on_time
+        description: "NULL tant que la commande n'est pas livrée."
+
+  - name: fct_order_items
+    description: "Faits articles vendus, 1 ligne par article d'une commande."
+    columns:
+      - name: order_item_pk
+        description: "Clé technique, hash de (order_id, order_item_id)."
+        data_tests: [unique, not_null]
+      - name: order_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+      - name: product_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+      - name: seller_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_sellers')
+                field: seller_id
+
+  - name: dim_customers
+    description: "Clients (personnes), 1 ligne par customer_unique_id, adresse de la dernière commande."
+    columns:
+      - name: customer_unique_id
+        data_tests: [unique, not_null]
+      - name: customer_segment
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['one_time', 'repeat', 'loyal']
+
+  - name: dim_products
+    description: "Produits avec leurs ventes, 1 ligne par produit."
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: dim_sellers
+    description: "Vendeurs avec leurs ventes, 1 ligne par vendeur."
+    columns:
+      - name: seller_id
+        data_tests: [unique, not_null]

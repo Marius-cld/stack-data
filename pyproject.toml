@@ -1,0 +1,9 @@
+[tool.ruff]
+# PEP 8 autorise jusqu'à 99 caractères pour un projet d'équipe
+line-length = 99
+target-version = "py313"
+extend-exclude = ["venv"]
+
+[tool.ruff.lint]
+# E/W : PEP 8, F : erreurs, I : ordre des imports, N : nommage (snake_case), UP : syntaxe moderne
+select = ["E", "W", "F", "I", "N", "UP"]
